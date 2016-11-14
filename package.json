@@ -1,0 +1,14 @@
+{
+  "name": "ddctl",
+  "version": "0.0.1",
+  "description": "Awesome remote controllin'",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "JeffreyDD",
+  "license": "ISC",
+  "dependencies": {
+    "robotjs": "^0.4.5"
+  }
+}
