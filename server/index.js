@@ -4,14 +4,18 @@ var HOST = '127.0.0.1';
 var dgram = require('dgram');
 var server = dgram.createSocket('udp4');
 
+var plugins = {}
+plugins.robotjs = require('./plugins/robotjs')
+
 server.on('listening', function () {
-    var address = server.address();
-    console.log('UDP Server listening on ' + address.address + ":" + address.port);
+  var address = server.address();
+  console.log('UDP Server listening on ' + address.address + ":" + address.port);
 });
 
-server.on('message', function (message, remote) {
-    console.log(remote.address + ':' + remote.port +' - ' + message);
-
+server.on('message', function (messageStr, remote) {
+  var message = JSON.parse(messageStr)
+  console.log(remote.address + ':' + remote.port +' - calling plugin' + message.plugin +' with payload ' + message);
+  plugins[message.plugin](JSON.parse(messageStr))
 });
 
 server.bind(PORT, HOST);

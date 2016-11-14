@@ -1,9 +1,15 @@
-var dgram = require('dgram');
-
+var program = require('commander');
 var ddctlClient = require('./lib');
 
 var PORT = 33333;
-var HOST = '127.0.0.1';
 
-var message = {"plugin":"robotjs","keyTap":"audio_pause"}
-ddctlClient.send(message, HOST, PORT)
+program
+  .version('0.0.1')
+  .arguments('<host> <cmd>')
+  .action(function (host, cmd) {
+     console.log('sending %s to %s', cmd, host)
+     var message = {"plugin":"robotjs","keyTap":cmd}
+     ddctlClient.send(message, host, PORT)
+  });
+
+program.parse(process.argv);
