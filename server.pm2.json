@@ -1,0 +1,6 @@
+{
+  "apps" : [{
+    "name"      : "ddctl-server",
+    "script"    : "server/index.js"
+  }]
+}
