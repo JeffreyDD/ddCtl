@@ -1,7 +1,8 @@
-var PORT = 33333;
-var HOST = '127.0.0.1';
-
+var program = require('commander');
 var dgram = require('dgram');
+
+var PORT = 33333;
+
 var server = dgram.createSocket('udp4');
 
 var plugins = {}
@@ -18,4 +19,4 @@ server.on('message', function (messageStr, remote) {
   plugins[message.plugin](JSON.parse(messageStr))
 });
 
-server.bind(PORT, HOST);
+server.bind(PORT);
