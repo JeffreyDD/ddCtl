@@ -8,6 +8,8 @@ var server = dgram.createSocket('udp4');
 
 var plugins = {}
 plugins.robotjs = require('./plugins/robotjs')
+plugins.powermgmt = require('./plugins/powermgmt')
+plugins.cli = require('./plugins/cli')
 
 server.on('listening', function () {
   var address = server.address();
