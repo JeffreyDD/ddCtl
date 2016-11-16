@@ -4,9 +4,12 @@
   "description": "Awesome remote controllin'",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "node server/index.js",
-    "client": "node client/index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "ddctl-server": "server/index.js",
+    "ddctl-client": "client/cli.js",
+    "ddctl-remote": "remote/cli.js"
   },
   "author": "JeffreyDD",
   "license": "ISC",

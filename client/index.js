@@ -1,15 +1,14 @@
-var program = require('commander');
-var ddctlClient = require('./lib');
+var dgram = require('dgram');
 
-var PORT = 33333;
+module.exports = {}
 
-program
-  .version('0.0.1')
-  .arguments('<host> <cmd>')
-  .action(function (host, cmd) {
-     console.log('sending %s to %s', cmd, host)
-     var message = {"plugin":"robotjs","keyTap":cmd}
-     ddctlClient.send(message, host, PORT)
+module.exports.send = function(message, HOST, PORT){
+  var messageBuf = new Buffer(JSON.stringify(message));
+  var client = dgram.createSocket('udp4');
+  client.send(messageBuf, 0, messageBuf.length, PORT, HOST, function(err, bytes) {
+      if (err) throw err;
+      console.log('UDP message sent to ' + HOST +':'+ PORT + ':');
+      console.log(message);
+      client.close();
   });
-
-program.parse(process.argv);
+}
