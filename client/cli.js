@@ -6,11 +6,12 @@ var PORT = 33333;
 
 program
   .version('0.0.1')
-  .arguments('<host> <cmd>')
-  .action(function (host, cmd) {
-     console.log('sending %s to %s', cmd, host)
-     var message = {"plugin":"robotjs","keyTap":cmd}
-     ddctlClient.send(message, host, PORT)
+  .arguments('<host> <plugin> <key> <value>')
+  .action(function (host, plugin, key, value) {
+    console.log('sending %s,%s over %s to %s', key, value, plugin, host)
+    var message = {"plugin": plugin}
+    message[key] = value
+    ddctlClient.send(message, host, PORT)
   });
 
 program.parse(process.argv);
