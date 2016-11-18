@@ -1,15 +1,23 @@
 #!/usr/bin/env node
-var program = require('commander');
-var dgram = require('dgram');
+const process = require('process')
+const dgram = require('dgram')
 
 var PORT = 33333;
 
-var server = dgram.createSocket('udp4');
+var configPath = process.env.HOME+'/.ddctl/server.json'
+var config = JSON.parse(fs.readFileSync(configPath))
 
 var plugins = {}
-plugins.robotjs = require('./plugins/robotjs')
-plugins.powermgmt = require('./plugins/powermgmt')
-plugins.cli = require('./plugins/cli')
+config.plugins.forEach(function(item){
+  try {
+    var pluginPkg = require(item+'/package.json')
+    var pluginName = pluginPkg.pluginName || item
+
+    plugins[pluginName] = require(item);
+  }
+})
+
+var server = dgram.createSocket('udp4');
 
 server.on('listening', function () {
   var address = server.address();
