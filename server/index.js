@@ -16,6 +16,8 @@ config.plugins.forEach(function(item){
     var pluginName = pluginPkg.pluginName || item
 
     plugins[pluginName] = require(item);
+  } catch(err) {
+    console.log('error loading plugin '+item+':', err)
   }
 })
 
