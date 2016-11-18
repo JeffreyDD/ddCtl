@@ -2,11 +2,13 @@
 const process = require('process')
 const dgram = require('dgram')
 
-var PORT = 33333;
-
+// Fetch Config
 var configPath = process.env.HOME+'/.ddctl/server.json'
 var config = JSON.parse(fs.readFileSync(configPath))
 
+var PORT = config.port || 33333
+
+// Load Plugins
 var plugins = {}
 config.plugins.forEach(function(item){
   try {

@@ -14,7 +14,6 @@
   "author": "JeffreyDD",
   "license": "ISC",
   "dependencies": {
-    "commander": "^2.9.0",
-    "robotjs": "^0.4.5"
+    "commander": "^2.9.0"
   }
 }
