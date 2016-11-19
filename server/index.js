@@ -1,37 +1,57 @@
 #!/usr/bin/env node
 const process = require('process')
+const fs = require('fs')
 const dgram = require('dgram')
+const requireg = require('requireg')
 
-// Fetch Config
+// Fetch / Create Config
 var configPath = process.env.HOME+'/.ddctl/server.json'
-var config = JSON.parse(fs.readFileSync(configPath))
+try {
+  var config = JSON.parse(fs.readFileSync(configPath))
+} catch(err) {
+  console.log('No config file found in ~/.ddctl/server.json')
+  var config = {} 
+}
 
-var PORT = config.port || 33333
 
 // Load Plugins
 var plugins = {}
-config.plugins.forEach(function(item){
-  try {
-    var pluginPkg = require(item+'/package.json')
-    var pluginName = pluginPkg.pluginName || item
+if(!config.plugins)
+  console.log('No plugins specified in server config!')
+else
+  config.plugins.forEach(function(plugin){
+    try {
+      var pluginPkg = requireg(plugin+'/package.json')
+      var pluginName = pluginPkg.pluginName || plugin
 
-    plugins[pluginName] = require(item);
-  } catch(err) {
-    console.log('error loading plugin '+item+':', err)
-  }
-})
+      plugins[pluginName] = requireg(plugin);
+    } catch(err) {
+      console.log('error loading plugin '+plugin+': ', err)
+    }
+  })
 
-var server = dgram.createSocket('udp4');
+// Load Transports
+var transports = Array()
+if(!config.transports)
+  console.log('No transports specified in server config!')
+else
+  config.transports.forEach(function(transportCfg){
+    try {
+      var transportPkgMnf = requireg(transportCfg.package+'/package.json')
+      var transportPkg    = requireg(transportCfg.package)
+      var transport       = new transportPkg(transportCfg)
 
-server.on('listening', function () {
-  var address = server.address();
-  console.log('UDP Server listening on ' + address.address + ":" + address.port);
-});
+      transport.listen(function(err, res){
+        try {
+          var plugin = plugins[res.plugin]
+        } catch(err) {
+          console.log('error(!!) processing payload: ', err)
+        }
+      })
 
-server.on('message', function (messageStr, remote) {
-  var message = JSON.parse(messageStr)
-  console.log(remote.address + ':' + remote.port +' - calling plugin' + message.plugin +' with payload ' + message);
-  plugins[message.plugin](JSON.parse(messageStr))
-});
+      transports.push(transport)
 
-server.bind(PORT);
+    } catch(err) {
+      console.log('error loading transport: ', transportCfg, err)
+    }
+  })
