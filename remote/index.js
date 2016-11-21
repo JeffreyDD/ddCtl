@@ -20,20 +20,15 @@ module.exports.hosts.get = function(host){
   return JSON.parse(fs.readFileSync(path))
 }
 
-module.exports.hosts.runAction = function(host, action){
-  var host = this.get(host)
+module.exports.hosts.runAction = function(hostName, action){
+  var host = this.get(hostName)
 
-  var hostProt = host.uri.split(':')[0]
-  var hostAddr = host.uri.split(':')[1].replace('//','')
-  var hostPort = host.uri.split(':')[2]
+  var hostUri = host.uri
 
   var action = host.actions[action]
 
-  console.log('action', 'hostAddr', 'hostPort')
-  console.log(action, hostAddr, hostPort)
+  console.log('action', 'hostUri')
+  console.log(action, hostUri)
 
-  if(hostProt == 'udp')
-    client.send(action, hostAddr, hostPort)
-  else
-    throw "Host protocol is not upd"
+  client.send(action, hostUri)
 }

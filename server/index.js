@@ -10,7 +10,7 @@ try {
   var config = JSON.parse(fs.readFileSync(configPath))
 } catch(err) {
   console.log('No config file found in ~/.ddctl/server.json')
-  var config = {} 
+  var config = {}
 }
 
 
@@ -43,7 +43,7 @@ else
 
       transport.listen(function(err, res){
         try {
-          var plugin = plugins[res.plugin]
+          plugins[res.plugin](res)
         } catch(err) {
           console.log('error(!!) processing payload: ', err)
         }

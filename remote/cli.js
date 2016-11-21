@@ -2,8 +2,6 @@
 var program = require('commander');
 var remote = require('./');
 
-var PORT = 33333;
-
 program
   .version('0.0.1')
   .arguments('<host> <task>')
